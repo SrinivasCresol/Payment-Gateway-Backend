@@ -36,11 +36,11 @@ app.post("/create-checkout-session", async (req, res) => {
           },
           unit_amount: item.price * 100,
         },
+        quantity: item.quantity,
         adjustable_quantity: {
           enabled: true,
           minimum: 1,
         },
-        quantity: item.qty,
       })),
       success_url: "http://localhost:3000/success",
       cancel_url: "http://localhost:3000/cancel",
@@ -49,8 +49,6 @@ app.post("/create-checkout-session", async (req, res) => {
     const session = await stripe.checkout.sessions.create(params);
     res.status(200).json({ sessionId: session.id });
   } catch (err) {
-    console.error("Error creating checkout session:", err);
-
     let errorMessage = "An error occurred while creating the checkout session.";
 
     if (err.type === "StripeInvalidRequestError") {
